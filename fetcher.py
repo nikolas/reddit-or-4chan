@@ -1,22 +1,56 @@
 #!/usr/bin/env python3
+import bleach
 import random
 import time
 import requests
 
 headers = {'User-Agent': 'Reddit or 4chan game, v0.1'}
 
-reddit_url = 'https://www.reddit.com/r/linuxcirclejerk.json'
-#fourchan_url = 'https://a.4cdn.org/s4s/thread/7358381.json'
+reddit_subs = [
+    'linuxcirclejerk', 'NoStupidQuestions', 'all',
+]
 
+fourchan_boards = [
+    'b', 'g', 'pol', 's4s',
+]
+
+# Get all the comments in a comment tree. Reddit makes this so
+# difficult compared to 4chan. There are some cool Redditors out there
+# though. Like Pria.
+def get_comments(thread):
+    children = [e.get('data').get('children') for e in thread]
+
+    comments = []
+
+    for child in children:
+        if len(child) < 1:
+            continue
+
+        # TODO: find nested comments here too
+        comment = child[0].get('data').get('body')
+        if comment:
+            comments.append(comment)
+
+    return comments
 
 # The sub-reddit has an array of children. Get a random one, then use
 # its 'url' to look up a thread. The thread has data.children. Get a
 # random one and return its selftext.
-def get_reddit_comment():
+def get_reddit_comment(sub):
+    reddit_url = 'https://www.reddit.com/r/{}.json'.format(sub)
     r = requests.get(reddit_url, headers=headers)
-    print(r.json())
+    subreddit = r.json()
+    thread = random.choice(subreddit.get('data').get('children'))
+    thread_id = thread.get('data').get('id')
+    thread_url = 'https://www.reddit.com/r/{}/comments/{}.json'.format(sub, thread_id)
 
-    return 'reddit'
+    r = requests.get(thread_url, headers=headers)
+    thread = r.json()
+
+    # Find all nested comments
+    comments = get_comments(thread)
+
+    return random.choice(comments)
 
 # Get a random thread ID, then use it to get a random comment.
 def get_fourchan_comment(board):
@@ -36,14 +70,43 @@ def get_fourchan_comment(board):
 
     return comment
 
-# Get 10 random commands
-def get_fourchan_comments(board):
-    pass
+def get_reddit_comments():
+    comments = []
+
+    for i in range(10):
+        sub = random.choice(reddit_subs)
+        comment = get_reddit_comment(sub)
+        comments.append(comment)
+
+    return comments
+
+# Get 10 random comments
+def get_fourchan_comments():
+    comments = []
+
+    for i in range(1):
+        board = random.choice(fourchan_boards)
+        comment = get_fourchan_comment(board)
+        if comment:
+            comments.append(bleach.clean(comment, strip=True))
+
+    return comments
 
 def main():
-    a = get_fourchan_comment('s4s')
+    print('Browsing 4chan...')
+    fourchan_comments = get_fourchan_comments()
+    print('Browsing Reddit...')
+    reddit_comments = get_reddit_comments()
 
-    # sleep for three hours
+    print('Writing to comments.txt')
+    f = open('comments.txt', 'w')
+    for c in fourchan_comments:
+        f.write('4:{}\n'.format(c))
+    for c in reddit_comments:
+        f.write('r:{}\n'.format(c))
+    f.close()
+
+    print('Waiting 3 hours.')
     time.sleep(3600 * 3)
 
 if __name__ == '__main__':
