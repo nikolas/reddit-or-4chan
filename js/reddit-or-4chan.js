@@ -81,7 +81,7 @@ $(document).ready(function() {
     });
 
     document.addEventListener('keydown', function(e) {
-        if (event.ctrlKey) {
+        if (event.ctrlKey || event.metaKey) {
             return;
         }
 
