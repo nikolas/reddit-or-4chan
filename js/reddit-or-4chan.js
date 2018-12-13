@@ -36,12 +36,22 @@ var newQuestion = function(data) {
 $(document).ready(function() {
     var data = {};
 
-    $.get('comments.txt', function(d) {
-        data = JSON.parse(d);
-        updateComments(data);
+    $.ajax({
+        method: 'get',
+        url: 'comments.txt',
+        headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        },
+        cache: false,
+        success: function(d) {
+            data = JSON.parse(d);
+            updateComments(data);
 
-        newQuestion(data);
-    })
+            newQuestion(data);
+        }
+    });
 
     $('#question button[name="reddit"]').click(function(e) {
         if (commentSource === 'reddit') {
