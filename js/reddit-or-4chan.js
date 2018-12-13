@@ -81,6 +81,10 @@ $(document).ready(function() {
     });
 
     document.addEventListener('keydown', function(e) {
+        if (event.ctrlKey) {
+            return;
+        }
+
         if (e.key.toLowerCase() === 'r') {
             onReddit(data);
         } else if (
