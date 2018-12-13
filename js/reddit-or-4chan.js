@@ -64,9 +64,10 @@ $(document).ready(function() {
             'Expires': '0'
         },
         cache: false,
-        success: function(data) {
-            updateComments(data);
-            newQuestion(data);
+        success: function(d) {
+            data = d;
+            updateComments(d);
+            newQuestion(d);
         }
     });
 
