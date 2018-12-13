@@ -57,7 +57,7 @@ $(document).ready(function() {
 
     $.ajax({
         method: 'get',
-        url: 'comments.txt',
+        url: 'comments.json',
         headers: {
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',

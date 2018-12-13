@@ -83,6 +83,7 @@ def get_reddit_comment(sub):
     thread_id = thread.get('data').get('id')
     thread_url = 'https://www.reddit.com/r/{}/comments/{}.json'.format(
         sub, thread_id)
+    print(thread_url)
 
     r = requests.get(thread_url, headers=headers)
     thread = r.json()
@@ -106,6 +107,7 @@ def get_fourchan_comment(board):
 
     thread_url = 'https://a.4cdn.org/{}/thread/{}.json'.format(
         board, thread_id)
+    print(thread_url)
     r = requests.get(thread_url, headers=headers)
     thread = r.json()
 
@@ -119,7 +121,7 @@ def get_fourchan_comment(board):
 def get_reddit_comments():
     comments = []
 
-    for i in range(30):
+    for i in range(40):
         sub = random.choice(reddit_subs)
         comment = get_reddit_comment(sub)
         if comment and not ignore_comment(comment):
@@ -132,7 +134,7 @@ def get_reddit_comments():
 def get_fourchan_comments():
     comments = []
 
-    for i in range(30):
+    for i in range(40):
         board = random.choice(fourchan_boards)
         comment = clean_comment(get_fourchan_comment(board))
         if comment and not ignore_comment(comment):
@@ -147,8 +149,8 @@ def main():
     print('Browsing Reddit...')
     reddit_comments = get_reddit_comments()
 
-    print('Writing to comments.txt')
-    f = open('comments.txt', 'w')
+    print('Writing to comments.json')
+    f = open('comments.json', 'w')
     f.write(json.dumps({
         'fourchan': fourchan_comments,
         'reddit': reddit_comments,
