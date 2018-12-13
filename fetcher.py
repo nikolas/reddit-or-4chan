@@ -11,7 +11,7 @@ import json
 headers = {'User-Agent': 'Reddit or 4chan game, v0.1'}
 reddit_subs = [
     'linuxcirclejerk', 'NoStupidQuestions', 'all',
-    'cooking',
+    'cooking', '4chan',
 ]
 fourchan_boards = [
     'b', 'g', 'pol', 's4s', 'ck',
@@ -25,7 +25,8 @@ def ignore_comment(comment):
         or 'reddit' in comment \
         or re.match(r'r\/\w+', comment) \
         or 'thread' in comment \
-        or 'board' in comment
+        or 'board' in comment \
+        or '/b/' in comment
 
 
 def clean_comment(comment):

@@ -1,23 +1,36 @@
 var commentSource = null;
+var commentTotal = 0;
 
-function randomChoice(arr) {
-    return arr[Math.floor(arr.length * Math.random())];
+function randomIdx(arr) {
+    return Math.floor(arr.length * Math.random());
 }
 
+var updateComments = function(data) {
+    commentTotal =
+        data['reddit'].length + data['fourchan'].length;
+    $('#commentTotal').text(commentTotal);
+};
+
 var newQuestion = function(data) {
+    var idx = null;
     var comment = null;
 
     if (Math.random() > 0.5) {
         // reddit
-        comment = randomChoice(data['reddit']);
+        idx = randomIdx(data['reddit']);
+        comment = data['reddit'][idx];
         commentSource = 'reddit';
+        data['reddit'].splice(idx, 1);
     } else {
         // 4chan
-        comment = randomChoice(data['fourchan']);
+        idx = randomIdx(data['fourchan']);
+        comment = data['fourchan'][idx];
         commentSource = '4chan';
+        data['fourchan'].splice(idx, 1);
     }
 
     $('#question>blockquote').text(comment);
+    updateComments(data);
 };
 
 $(document).ready(function() {
@@ -25,7 +38,8 @@ $(document).ready(function() {
 
     $.get('comments.txt', function(d) {
         data = JSON.parse(d);
-        console.log(data);
+        updateComments(data);
+
         newQuestion(data);
     })
 
@@ -38,6 +52,7 @@ $(document).ready(function() {
 
         newQuestion(data);
     });
+
     $('#question button[name="4chan"]').click(function(e) {
         if (commentSource === 'reddit') {
             alert('wrong.');
