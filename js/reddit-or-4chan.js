@@ -25,6 +25,7 @@ $(document).ready(function() {
 
     $.get('comments.txt', function(d) {
         data = JSON.parse(d);
+        console.log(data);
         newQuestion(data);
     })
 

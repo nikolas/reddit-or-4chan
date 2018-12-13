@@ -11,11 +11,21 @@ import json
 headers = {'User-Agent': 'Reddit or 4chan game, v0.1'}
 reddit_subs = [
     'linuxcirclejerk', 'NoStupidQuestions', 'all',
+    'cooking',
 ]
 fourchan_boards = [
-    'b', 'g', 'pol', 's4s',
+    'b', 'g', 'pol', 's4s', 'ck',
 ]
 quote_re = re.compile(r'>+(\d+)?(\s+)?')
+
+
+def ignore_comment(comment):
+    return 'reddit.com' in comment \
+        or '/r/' in comment \
+        or 'reddit' in comment \
+        or re.match(r'r\/\w+', comment) \
+        or 'thread' in comment \
+        or 'board' in comment
 
 
 def clean_comment(comment):
@@ -106,10 +116,11 @@ def get_fourchan_comment(board):
 def get_reddit_comments():
     comments = []
 
-    for i in range(10):
+    for i in range(25):
         sub = random.choice(reddit_subs)
         comment = get_reddit_comment(sub)
-        comments.append(comment)
+        if comment and not ignore_comment(comment):
+            comments.append(comment)
 
     return comments
 
@@ -118,10 +129,10 @@ def get_reddit_comments():
 def get_fourchan_comments():
     comments = []
 
-    for i in range(10):
+    for i in range(25):
         board = random.choice(fourchan_boards)
         comment = clean_comment(get_fourchan_comment(board))
-        if comment:
+        if comment and not ignore_comment(comment):
             comments.append(comment)
 
     return comments
@@ -139,10 +150,6 @@ def main():
         'fourchan': fourchan_comments,
         'reddit': reddit_comments,
     }))
-    # for c in fourchan_comments:
-    #     f.write('4:{}\n'.format(c))
-    # for c in reddit_comments:
-    #     f.write('r:{}\n'.format(c))
     f.close()
 
     print('Waiting 3 hours.')
