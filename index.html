@@ -4,16 +4,27 @@
         <meta charset="utf-8">
         <title>Reddit or 4chan?</title>
         <link rel="stylesheet" href="normalize.css">
+        <style type="text/css">
+        .container {
+            margin: 0 2em;
+        }
+        </style>
     </head>
     <body>
-        <h1>Reddit or 4chan?</h1>
+        <div class="container">
+            <h1>Reddit or 4chan?</h1>
 
-        Did this comment come from Reddit or 4chan?
-        <blockquote>
-            This is officially a RUDE board now.
-        </blockquote>
-        <button>Reddit</button>
-        <button>4chan</button>
+            <div id="question">
+                Did this comment come from Reddit or 4chan?
+                <blockquote>
+                    This is officially a RUDE board now.
+                </blockquote>
+                <button name="reddit">Reddit</button>
+                <button name="4chan">4chan</button>
+            </div>
+        </div>
 
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/reddit-or-4chan.js"></script>
     </body>
 </html>

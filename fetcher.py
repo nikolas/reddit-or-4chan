@@ -5,6 +5,7 @@ import time
 import requests
 import re
 import html
+import json
 
 
 headers = {'User-Agent': 'Reddit or 4chan game, v0.1'}
@@ -19,6 +20,9 @@ quote_re = re.compile(r'>+(\d+)?(\s+)?')
 
 def clean_comment(comment):
     """Clean comment text for 4chan."""
+    if comment is None:
+        return ''
+
     # Decode HTML entities
     comment = html.unescape(comment)
 
@@ -73,7 +77,10 @@ def get_reddit_comment(sub):
     # Find all nested comments
     comments = get_comments(thread)
 
-    return random.choice(comments)
+    if comments:
+        return random.choice(comments)
+
+    return None
 
 
 # Get a random thread ID, then use it to get a random comment.
@@ -113,9 +120,9 @@ def get_fourchan_comments():
 
     for i in range(10):
         board = random.choice(fourchan_boards)
-        comment = get_fourchan_comment(board)
+        comment = clean_comment(get_fourchan_comment(board))
         if comment:
-            comments.append(clean_comment(comment))
+            comments.append(comment)
 
     return comments
 
@@ -128,10 +135,14 @@ def main():
 
     print('Writing to comments.txt')
     f = open('comments.txt', 'w')
-    for c in fourchan_comments:
-        f.write('4:{}\n'.format(c))
-    for c in reddit_comments:
-        f.write('r:{}\n'.format(c))
+    f.write(json.dumps({
+        'fourchan': fourchan_comments,
+        'reddit': reddit_comments,
+    }))
+    # for c in fourchan_comments:
+    #     f.write('4:{}\n'.format(c))
+    # for c in reddit_comments:
+    #     f.write('r:{}\n'.format(c))
     f.close()
 
     print('Waiting 3 hours.')
