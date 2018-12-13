@@ -33,6 +33,25 @@ var newQuestion = function(data) {
     updateComments(data);
 };
 
+var onReddit = function(data) {
+    if (commentSource === 'reddit') {
+        alert('yeah. okay. you win. whatever');
+    } else {
+        alert('wrong.');
+    }
+
+    newQuestion(data);
+};
+var onFourchan = function(data) {
+    if (commentSource === 'reddit') {
+        alert('wrong.');
+    } else {
+        alert('yeah. okay. you win. whatever');
+    }
+
+    newQuestion(data);
+};
+
 $(document).ready(function() {
     var data = {};
 
@@ -54,22 +73,21 @@ $(document).ready(function() {
     });
 
     $('#question button[name="reddit"]').click(function(e) {
-        if (commentSource === 'reddit') {
-            alert('yeah. okay. you win. whatever');
-        } else {
-            alert('wrong.');
-        }
-
-        newQuestion(data);
+        onReddit(data);
     });
 
     $('#question button[name="4chan"]').click(function(e) {
-        if (commentSource === 'reddit') {
-            alert('wrong.');
-        } else {
-            alert('yeah. okay. you win. whatever');
-        }
+        onFourchan(data);
+    });
 
-        newQuestion(data);
+    document.addEventListener('keydown', function(e) {
+        if (e.key.toLowerCase() === 'r') {
+            onReddit(data);
+        } else if (
+            e.key.toLowerCase() === 'f' ||
+                e.key.toLowerCase() === '4'
+        ) {
+            onFourchan(data);
+        }
     });
 });
