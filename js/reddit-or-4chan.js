@@ -64,10 +64,8 @@ $(document).ready(function() {
             'Expires': '0'
         },
         cache: false,
-        success: function(d) {
-            data = JSON.parse(d);
+        success: function(data) {
             updateComments(data);
-
             newQuestion(data);
         }
     });
