@@ -11,10 +11,11 @@ import json
 headers = {'User-Agent': 'Reddit or 4chan game, v0.1'}
 reddit_subs = [
     'linuxcirclejerk', 'NoStupidQuestions', 'all',
-    'cooking', '4chan',
+    'cooking', '4chan', 'history', 'personalfinance',
+    'travel',
 ]
 fourchan_boards = [
-    'b', 'g', 'pol', 's4s', 'ck',
+    'b', 'g', 'pol', 's4s', 'ck', 'his', 'biz', 'trv',
 ]
 quote_re = re.compile(r'>+(\d+)?(\s+)?')
 
@@ -26,7 +27,8 @@ def ignore_comment(comment):
         or re.match(r'r\/\w+', comment) \
         or 'thread' in comment \
         or 'board' in comment \
-        or '/b/' in comment
+        or '/b/' in comment \
+        or '/b' in comment
 
 
 def clean_comment(comment):
@@ -117,7 +119,7 @@ def get_fourchan_comment(board):
 def get_reddit_comments():
     comments = []
 
-    for i in range(25):
+    for i in range(30):
         sub = random.choice(reddit_subs)
         comment = get_reddit_comment(sub)
         if comment and not ignore_comment(comment):
@@ -130,7 +132,7 @@ def get_reddit_comments():
 def get_fourchan_comments():
     comments = []
 
-    for i in range(25):
+    for i in range(30):
         board = random.choice(fourchan_boards)
         comment = clean_comment(get_fourchan_comment(board))
         if comment and not ignore_comment(comment):
