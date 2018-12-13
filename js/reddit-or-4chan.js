@@ -35,18 +35,18 @@ var newQuestion = function(data) {
 
 var onReddit = function(data) {
     if (commentSource === 'reddit') {
-        alert('yeah. okay. you win. whatever');
+        alert('yeah. okay. you win. whatever. it was reddit.');
     } else {
-        alert('wrong.');
+        alert('wrong. 4chan.');
     }
 
     newQuestion(data);
 };
 var onFourchan = function(data) {
     if (commentSource === 'reddit') {
-        alert('wrong.');
+        alert('wrong. reddit.');
     } else {
-        alert('yeah. okay. you win. whatever');
+        alert('yeah. okay. you win. whatever. it was 4chan.');
     }
 
     newQuestion(data);
